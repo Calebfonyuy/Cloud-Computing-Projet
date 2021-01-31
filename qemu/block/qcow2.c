@@ -2135,6 +2135,9 @@ qcow2_co_preadv_encrypted(BlockDriverState *bs,
                            QEMUIOVector *qiov,
                            uint64_t qiov_offset)
 {
+    double time_spent = 0.0; 
+    clock_t begin = clock();
+
     int ret;
     BDRVQcow2State *s = bs->opaque;
     uint8_t *buf;
@@ -2168,15 +2171,15 @@ qcow2_co_preadv_encrypted(BlockDriverState *bs,
     }
     qemu_iovec_from_buf(qiov, qiov_offset, buf, bytes);
 
-    time_t rawtime;
-    struct tm * timeinfo;
+    clock_t end = clock();
+    time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
 
-    time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
 
     FILE *log_file = fopen("log_read.log", "a+");
     if(log_file != NULL){
-        fprintf(log_file, "nous sommes dans read task encrypted , %s, offset : %ld, host_offset : %ld, bytes : %ld, ret : %d, buf : %s \n", asctime (timeinfo) ,offset, host_offset, bytes, ret, buf );
+        fprintf(log_file, "%d-%d-%d, %d:%d:%d , temps : %f, offset : %ld, cur_bytes : %d , bytes : %ld, \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, time_spent ,offset, bytes, bytes);
         fclose(log_file);
     }
     else{
@@ -2624,8 +2627,7 @@ static coroutine_fn int qcow2_co_pwritev_part(
 
     while (bytes != 0 && aio_task_pool_status(aio) == 0) {
 
-	double time_spent = 0.0;
- 
+	double time_spent = 0.0; 
         clock_t begin = clock();
 
         l2meta = NULL;
@@ -2674,7 +2676,7 @@ static coroutine_fn int qcow2_co_pwritev_part(
 	
 	FILE *log_file = fopen("log_write.log", "a+");
         if(log_file != NULL){
-        fprintf(log_file, "%d-%d-%d, %d:%d:%d, temps : %f, offset : %ld, cur_bytes : %d , bytes : %ld, \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, time_spent ,offset, cur_bytes, bytes);
+        fprintf(log_file, "%d-%d-%d, %d:%d:%d , temps : %f, offset : %ld, cur_bytes : %d , bytes : %ld, \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, time_spent ,offset, cur_bytes, bytes);
         fclose(log_file);
         }
         else{
@@ -4700,6 +4702,9 @@ qcow2_co_preadv_compressed(BlockDriverState *bs,
                            QEMUIOVector *qiov,
                            size_t qiov_offset)
 {
+    double time_spent = 0.0; 
+    clock_t begin = clock();    
+
     BDRVQcow2State *s = bs->opaque;
     int ret = 0, csize, nb_csectors;
     uint64_t coffset;
@@ -4732,16 +4737,15 @@ qcow2_co_preadv_compressed(BlockDriverState *bs,
 
     qemu_iovec_from_buf(qiov, qiov_offset, out_buf + offset_in_cluster, bytes);
 
-    time_t rawtime;
-    struct tm * timeinfo;
+    clock_t end = clock();
+    time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
 
-    time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
     
     FILE *log_file = fopen("log_read.log", "a+");
     if(log_file != NULL){
-        fprintf(log_file, "nous sommes dans read task compréssé, %s, offset : %ld, csize : %d , bytes : %ld, ret : %d, outbuf : %s \n", asctime (timeinfo),offset, csize, bytes, ret, out_buf );
-        fclose(log_file);
+        fprintf(log_file, "%d-%d-%d, %d:%d:%d , temps : %f, offset : %ld, cur_bytes : %d , bytes : %ld, \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, time_spent ,offset, bytes, bytes);
     }
     else{
         printf("echec de l'ouverture du fichier lecture");
