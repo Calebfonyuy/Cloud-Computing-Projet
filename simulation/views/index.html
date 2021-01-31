@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title>QEMU</title>
+
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/jquery.dataTables.min.css">
+		<style type="text/css">
+			#latest img{
+				height: 300pt;
+				width: 300pt;
+			}
+			#old-images img{
+				height: 200pt;
+				width: 200pt;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="text-success h3" href="#">Monitoring a qcow2 disk</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link font-weight-bold" href="#"><span class="sr-only">(current)</span></a>
+				</li>
+			</div>
+		</nav>
+		<div class="container-fluid row">
+			<div class="col-md-12 m-auto p-2">
+				<legend>File reading logs</legend>
+				<table class="table table-bordered table-hover" id="read-table">
+					<caption>qemu file read logs</caption>
+					<thead>
+						<tr>
+							<th>Cluster</th>
+							<th>Dur&eacute;e</th>
+							<th>Nb Octets</th>
+							<th>Octets</th>
+							<th>Nb Occurences</th>
+							<th>Intensit&eacute;</th>
+							<th>Debit</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="m-3">&nbsp;</div>
+			<div class="col-md-12 m-auto p-2">
+				<legend>File writing logs</legend>
+				<table class="table table-bordered table-hover" id="write-table">
+					<caption>qemu file write logs</caption>
+					<thead>
+						<tr>
+							<th>Cluster</th>
+							<th>Dur&eacute;e</th>
+							<th>Nb Octets</th>
+							<th>Octets</th>
+							<th>Nb Occurences</th>
+							<th>Intensit&eacute;</th>
+							<th>Debit</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="container">
+			<div class="container text-center">
+				<h3>Latest snapshot</h3>
+				<div class="container-fluid" id="latest">
+					
+				</div>
+			</div>
+			<div class="container mt-3">
+				<h4>Older snapshots</h4>
+				<div class="container-fluid row" id="old-images">
+
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="/js/jquery-3.5.1.min.js" charset="utf-8"></script>
+	<script src="/js/bootstrap.min.js" charset="utf-8"></script>
+	<script src="/js/jquery.dataTables.min.js" charset="utf-8"></script>
+	<script src="/js/sockets.js" charset="utf-8"></script>
+</html>
